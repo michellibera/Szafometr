@@ -45,31 +45,64 @@ const SzafometrApp = () => {
   useEffect(() => {
     const weatherTypes = [
       { description: 'Słonecznie', temp: 28, feelsLike: 30 },
+      { description: 'Bezchmurnie', temp: 26, feelsLike: 28 },
+      { description: 'Bardzo gorąco', temp: 35, feelsLike: 38 },
       { description: 'Deszczowo', temp: 15, feelsLike: 13 },
+      { description: 'Burza z deszczem', temp: 12, feelsLike: 10 },
       { description: 'Pochmurnie', temp: 18, feelsLike: 17 },
+      { description: 'Częściowo pochmurnie', temp: 22, feelsLike: 24 },
       { description: 'Zimno', temp: 2, feelsLike: -1 },
+      { description: 'Bardzo zimno', temp: -8, feelsLike: -12 },
       { description: 'Mgliście', temp: 8, feelsLike: 5 },
       { description: 'Wietrznie', temp: 12, feelsLike: 8 },
-      { description: 'Śnieżnie', temp: -3, feelsLike: -8 }
+      { description: 'Śnieżnie', temp: -3, feelsLike: -8 },
+      { description: 'Lekko pochmurnie', temp: 20, feelsLike: 22 }
     ];
     
     const randomWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
     setWeather(randomWeather);
   }, []);
 
-  // Weather gradients
+  // Weather gradients - Beautiful modern gradients
   const getWeatherGradient = () => {
     const temp = weather.temp;
     const desc = weather.description.toLowerCase();
     
-    if (desc.includes('deszcz')) return 'from-blue-200 via-cyan-300 to-blue-100';
-    if (desc.includes('śnież')) return 'from-blue-50 via-gray-100 to-cyan-50';
-    if (desc.includes('mgł')) return 'from-gray-100 via-gray-300 to-gray-200';
-    if (desc.includes('wietrz')) return 'from-cyan-100 via-indigo-200 to-blue-200';
-    if (desc.includes('słonecz') && temp > 20) return 'from-yellow-100 via-pink-200 to-orange-200';
-    if (temp < 5) return 'from-blue-100 via-gray-50 to-blue-50';
-    if (desc.includes('chmur')) return 'from-gray-50 via-gray-200 to-gray-100';
-    return 'from-purple-100 via-pink-200 to-purple-200';
+    // Sunny conditions
+    if (desc.includes('słonecz') && temp > 25) return 'from-orange-300 via-yellow-300 to-sky-300'; // Hot sunny
+    if (desc.includes('słonecz')) return 'from-yellow-200 via-orange-200 to-blue-300'; // Regular sunny
+    if (desc.includes('bezchmur')) return 'from-yellow-200 via-orange-200 to-blue-300'; // Clear sky
+    
+    // Rainy conditions  
+    if (desc.includes('deszcz') && desc.includes('burz')) return 'from-gray-800 via-gray-600 to-gray-500'; // Stormy
+    if (desc.includes('deszcz')) return 'from-gray-600 via-gray-500 to-gray-400'; // Rainy
+    
+    // Snow conditions
+    if (desc.includes('śnież')) return 'from-gray-100 via-gray-200 to-gray-300'; // Snowy
+    
+    // Fog conditions
+    if (desc.includes('mgł')) return 'from-gray-50 via-gray-100 to-gray-200'; // Foggy
+    
+    // Wind conditions
+    if (desc.includes('wietrz')) return 'from-blue-300 via-purple-300 to-pink-300'; // Windy
+    
+    // Cloud conditions
+    if (desc.includes('częściowo') || desc.includes('lekko')) return 'from-sky-300 via-purple-100 to-yellow-200'; // Partly cloudy
+    if (desc.includes('chmur')) return 'from-gray-300 via-gray-200 to-gray-100'; // Cloudy
+    
+    // Temperature based
+    if (temp > 30) return 'from-red-400 via-orange-400 to-yellow-300'; // Very hot
+    if (temp < -5) return 'from-blue-500 via-blue-400 to-blue-600'; // Very cold
+    if (temp < 5) return 'from-blue-400 via-blue-300 to-blue-500'; // Cold
+    
+    // Time-based fallbacks
+    const hour = new Date().getHours();
+    if (hour >= 18 || hour <= 6) return 'from-slate-700 via-blue-600 to-blue-700'; // Night
+    if (hour >= 6 && hour <= 8) return 'from-pink-300 via-yellow-200 to-orange-300'; // Dawn
+    if (hour >= 17 && hour <= 19) return 'from-red-400 via-orange-400 to-purple-600'; // Sunset
+    
+    // Default beautiful gradient
+    return 'from-purple-300 via-pink-300 to-purple-400';
   };
 
   // Refresh weather function
@@ -78,12 +111,18 @@ const SzafometrApp = () => {
     
     const weatherTypes = [
       { description: 'Słonecznie', temp: 28, feelsLike: 30 },
+      { description: 'Bezchmurnie', temp: 26, feelsLike: 28 },
+      { description: 'Bardzo gorąco', temp: 35, feelsLike: 38 },
       { description: 'Deszczowo', temp: 15, feelsLike: 13 },
+      { description: 'Burza z deszczem', temp: 12, feelsLike: 10 },
       { description: 'Pochmurnie', temp: 18, feelsLike: 17 },
+      { description: 'Częściowo pochmurnie', temp: 22, feelsLike: 24 },
       { description: 'Zimno', temp: 2, feelsLike: -1 },
+      { description: 'Bardzo zimno', temp: -8, feelsLike: -12 },
       { description: 'Mgliście', temp: 8, feelsLike: 5 },
       { description: 'Wietrznie', temp: 12, feelsLike: 8 },
-      { description: 'Śnieżnie', temp: -3, feelsLike: -8 }
+      { description: 'Śnieżnie', temp: -3, feelsLike: -8 },
+      { description: 'Lekko pochmurnie', temp: 20, feelsLike: 22 }
     ];
     
     await new Promise(resolve => setTimeout(resolve, 1000));
