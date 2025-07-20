@@ -1,4 +1,7 @@
+'use client';
+
 import { RefreshCw } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface Weather {
   temp: number;
@@ -21,6 +24,13 @@ export default function WeatherSection({
   onRefreshWeather, 
   getWeatherGradient 
 }: WeatherSectionProps) {
+  const [mounted, setMounted] = useState(false);
+
+  // Only render time on client side to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="flex-none flex flex-col items-center justify-center px-6 py-4">
       <div className="w-full mb-2">
@@ -34,7 +44,7 @@ export default function WeatherSection({
           </div>
           <div className="flex items-center gap-3">
             <div className="text-xs text-gray-600">
-              {lastRefresh.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}
+              {mounted ? lastRefresh.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
             </div>
             <button
               onClick={onRefreshWeather}

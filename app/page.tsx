@@ -34,7 +34,6 @@ const SzafometrApp = () => {
   const [outfitHistory, setOutfitHistory] = useState<OutfitEntry[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Update time every minute
   useEffect(() => {
@@ -147,10 +146,7 @@ const SzafometrApp = () => {
 
   return (
     <div className="min-h-screen w-full max-w-md mx-auto bg-gray-100 relative">
-      <Header 
-        isLoggedIn={isLoggedIn}
-        onToggleLogin={() => setIsLoggedIn(!isLoggedIn)}
-      />
+      <Header />
 
       {/* Main Content */}
       <div className={`min-h-screen bg-gradient-to-br ${getWeatherGradient()} flex flex-col pt-20 pb-8`}>
