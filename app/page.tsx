@@ -63,7 +63,7 @@ const SzafometrApp = () => {
     setWeather(randomWeather);
   }, []);
 
-  // Weather gradients - Beautiful modern gradients
+  // Weather gradients - Beautiful modern gradients with better text visibility
   const getWeatherGradient = () => {
     const temp = weather.temp;
     const desc = weather.description.toLowerCase();
@@ -73,9 +73,9 @@ const SzafometrApp = () => {
     if (desc.includes('słonecz')) return 'from-yellow-200 via-orange-200 to-blue-300'; // Regular sunny
     if (desc.includes('bezchmur')) return 'from-yellow-200 via-orange-200 to-blue-300'; // Clear sky
     
-    // Rainy conditions  
-    if (desc.includes('deszcz') && desc.includes('burz')) return 'from-gray-800 via-gray-600 to-gray-500'; // Stormy
-    if (desc.includes('deszcz')) return 'from-gray-600 via-gray-500 to-gray-400'; // Rainy
+    // Rainy conditions - made lighter for text visibility
+    if (desc.includes('deszcz') && desc.includes('burz')) return 'from-gray-400 via-gray-300 to-slate-400'; // Stormy
+    if (desc.includes('deszcz')) return 'from-gray-300 via-slate-300 to-gray-400'; // Rainy
     
     // Snow conditions
     if (desc.includes('śnież')) return 'from-gray-100 via-gray-200 to-gray-300'; // Snowy
@@ -90,16 +90,16 @@ const SzafometrApp = () => {
     if (desc.includes('częściowo') || desc.includes('lekko')) return 'from-sky-300 via-purple-100 to-yellow-200'; // Partly cloudy
     if (desc.includes('chmur')) return 'from-gray-300 via-gray-200 to-gray-100'; // Cloudy
     
-    // Temperature based
+    // Temperature based - made lighter for cold temps
     if (temp > 30) return 'from-red-400 via-orange-400 to-yellow-300'; // Very hot
-    if (temp < -5) return 'from-blue-500 via-blue-400 to-blue-600'; // Very cold
-    if (temp < 5) return 'from-blue-400 via-blue-300 to-blue-500'; // Cold
+    if (temp < -5) return 'from-blue-300 via-slate-300 to-blue-400'; // Very cold
+    if (temp < 5) return 'from-blue-300 via-slate-300 to-blue-400'; // Cold
     
-    // Time-based fallbacks
+    // Time-based fallbacks - made lighter for night
     const hour = new Date().getHours();
-    if (hour >= 18 || hour <= 6) return 'from-slate-700 via-blue-600 to-blue-700'; // Night
+    if (hour >= 18 || hour <= 6) return 'from-slate-400 via-blue-400 to-slate-500'; // Night
     if (hour >= 6 && hour <= 8) return 'from-pink-300 via-yellow-200 to-orange-300'; // Dawn
-    if (hour >= 17 && hour <= 19) return 'from-red-400 via-orange-400 to-purple-600'; // Sunset
+    if (hour >= 17 && hour <= 19) return 'from-red-400 via-orange-400 to-purple-500'; // Sunset
     
     // Default beautiful gradient
     return 'from-purple-300 via-pink-300 to-purple-400';
