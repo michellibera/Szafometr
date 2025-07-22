@@ -206,7 +206,7 @@ const SzafometrApp = () => {
             />
           </div>
 
-          {showAddOutfit && (
+          <div className={`absolute top-0 w-full transition-all duration-500 ease-in-out ${showAddOutfit ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
             <AddOutfitForm
               currentOutfit={currentOutfit}
               comfortLevel={comfortLevel}
@@ -216,7 +216,7 @@ const SzafometrApp = () => {
               onCancel={() => setShowAddOutfit(false)}
               isDisabled={!currentOutfit || !comfortLevel}
             />
-          )}
+          </div>
         </div>
 
         <Forecast currentTemp={weather.temp} />
