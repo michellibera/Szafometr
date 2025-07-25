@@ -2,15 +2,10 @@
 
 import { RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
-
-interface Weather {
-  temp: number;
-  description: string;
-  feelsLike: number;
-}
+import { CurrentWeather } from '@/lib/weather/weatherService';
 
 interface WeatherSectionProps {
-  weather: Weather;
+  weather: CurrentWeather | null;
   lastRefresh: Date;
   isRefreshing: boolean;
   onRefreshWeather: () => void;
@@ -30,6 +25,18 @@ export default function WeatherSection({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  if (!weather) {
+    return (
+      <div className="flex-none flex flex-col items-center justify-center px-6 py-4">
+        <div className="w-full mb-2">
+          <div className="flex justify-center items-center mb-4">
+            <div className="text-2xl font-medium text-black">Ładowanie danych pogodowych...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-none flex flex-col items-center justify-center px-6 py-4">
