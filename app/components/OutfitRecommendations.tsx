@@ -10,11 +10,13 @@ export default function OutfitRecommendations({ recommendations, onAddOutfit }: 
     <div className={`p-5 transition-all duration-500 ease-in-out translate-x-0 opacity-100`}>
       <h3 className="text-2xl font-bold text-black mb-4">Co założyć?</h3>
       <div className="space-y-3 mb-8">
-        {recommendations.map((item, i) => (
-          <div key={i} className="bg-white/20 backdrop-blur-sm rounded p-3 border border-white/30">
-            <span className="text-sm text-black font-medium">• {item}</span>
-          </div>
-        ))}
+        {recommendations
+          .filter(item => item && item.trim().length > 0)
+          .map((item, i) => (
+            <div key={i} className="bg-white/20 backdrop-blur-sm rounded p-3 border border-white/30">
+              <span className="text-sm text-black font-medium">• {item}</span>
+            </div>
+          ))}
       </div>
       <button
         onClick={onAddOutfit}

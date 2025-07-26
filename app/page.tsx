@@ -8,6 +8,7 @@ import AddOutfitForm from './components/AddOutfitForm';
 import Forecast from './components/Forecast';
 import OutfitHistory from './components/OutfitHistory';
 import { WeatherData, HourlyWeather, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
+import { ClothingDecisionEngine, FormattedClothingRecommendation } from '@/lib/clothing/clothingEngine';
 
 interface OutfitEntry {
   outfit: string;
@@ -28,6 +29,7 @@ const SzafometrApp = () => {
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
   const [weatherError, setWeatherError] = useState<string | null>(null);
   const [locationPermission, setLocationPermission] = useState<'pending' | 'granted' | 'denied'>('pending');
+  const [clothingRecommendation, setClothingRecommendation] = useState<FormattedClothingRecommendation | null>(null);
 
   // Update time every minute
   useEffect(() => {
@@ -56,6 +58,19 @@ const SzafometrApp = () => {
 
     loadInitialWeather();
   }, []);
+
+  // Generate clothing recommendation when weather data changes
+  useEffect(() => {
+    if (weather) {
+      try {
+        const recommendation = ClothingDecisionEngine.getRecommendation(weather);
+        const formatted = ClothingDecisionEngine.formatRecommendation(recommendation);
+        setClothingRecommendation(formatted);
+      } catch (error) {
+        console.error('Error generating clothing recommendation:', error);
+      }
+    }
+  }, [weather]);
 
   // Weather gradients - Beautiful modern gradients based on WMO weather codes
   const getWeatherGradient = () => {
@@ -181,7 +196,7 @@ const SzafometrApp = () => {
     }
   }
 
-  // Outfit recommendations
+  // Outfit recommendations using intelligent clothing engine
   const getOutfitRecommendation = () => {
     if (!weather?.current) {
       return [
@@ -192,37 +207,17 @@ const SzafometrApp = () => {
       ];
     }
     
-    const temp = weather.current.temp;
-    
-    if (temp > 25) {
+    if (!clothingRecommendation) {
       return [
-        "T-shirt (albo bez koszuli)",
-        "Szorty (im krótsze tym lepiej)",
-        "Sandały (albo na bosaka)",
-        "Okulary słoneczne"
-      ];
-    } else if (temp < 10) {
-      return [
-        "Gruba kurtka",
-        "Ciepłe spodnie",
-        "Buty zimowe",
-        "Czapka i rękawiczki"
-      ];
-    } else if (weather.current.description.toLowerCase().includes('deszcz')) {
-      return [
-        "Kurtka przeciwdeszczowa",
-        "Dżinsy (i tak się zmoczą)",
-        "Buty wodoodporne",
-        "Parasol (jeśli ci się chce)"
-      ];
-    } else {
-      return [
-        "Lekka kurtka lub bluza",
-        "Dżinsy lub chinosy",
-        "Trampki",
-        "Cokolwiek sensownego"
+        "Generowanie rekomendacji...",
+        "Analizowanie warunków pogodowych",
+        "",
+        ""
       ];
     }
+    
+    // Convert detailed recommendation to simple 4-item format for existing UI
+    return ClothingDecisionEngine.getSimpleRecommendation(weather);
   };
 
   const handleSaveOutfit = () => {
@@ -315,6 +310,7 @@ const SzafometrApp = () => {
             />
           </div>
         </div>
+
 
         <Forecast hourlyData={weather?.hourly || []} />
 
