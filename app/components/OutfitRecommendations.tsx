@@ -1,11 +1,14 @@
 import { Plus } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface OutfitRecommendationsProps {
   recommendations: string[];
   onAddOutfit: () => void;
+  onLogin?: () => void;
 }
 
-export default function OutfitRecommendations({ recommendations, onAddOutfit }: OutfitRecommendationsProps) {
+export default function OutfitRecommendations({ recommendations, onAddOutfit, onLogin }: OutfitRecommendationsProps) {
+  const { user } = useAuth();
   return (
     <div className={`p-5 transition-all duration-500 ease-in-out translate-x-0 opacity-100`}>
       <h3 className="text-2xl font-bold text-black mb-4">Co założyć?</h3>
@@ -19,11 +22,11 @@ export default function OutfitRecommendations({ recommendations, onAddOutfit }: 
           ))}
       </div>
       <button
-        onClick={onAddOutfit}
+        onClick={user ? onAddOutfit : onLogin}
         className="w-full bg-black text-white rounded-full py-3 px-5 font-bold text-base hover:bg-black/80 transition-colors flex items-center justify-center gap-2"
       >
         <Plus className="w-4 h-4" />
-        Zapisz dzisiejszy strój
+        {user ? "Zapisz dzisiejszy strój" : "Zaloguj się, aby zapisać strój"}
       </button>
     </div>
   );

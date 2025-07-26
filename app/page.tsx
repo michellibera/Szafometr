@@ -9,6 +9,7 @@ import Forecast from './components/Forecast';
 import OutfitHistory from './components/OutfitHistory';
 import { WeatherData, HourlyWeather, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
 import { ClothingDecisionEngine, FormattedClothingRecommendation } from '@/lib/clothing/clothingEngine';
+import { useAuth } from '@/context/AuthContext';
 
 interface OutfitEntry {
   outfit: string;
@@ -18,6 +19,7 @@ interface OutfitEntry {
 }
 
 const SzafometrApp = () => {
+  const { user, signInWithGoogle } = useAuth();
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [time, setTime] = useState(new Date());
   const [showAddOutfit, setShowAddOutfit] = useState(false);
@@ -30,6 +32,7 @@ const SzafometrApp = () => {
   const [weatherError, setWeatherError] = useState<string | null>(null);
   const [locationPermission, setLocationPermission] = useState<'pending' | 'granted' | 'denied'>('pending');
   const [clothingRecommendation, setClothingRecommendation] = useState<FormattedClothingRecommendation | null>(null);
+  const [pendingOutfitSave, setPendingOutfitSave] = useState(false);
 
   // Update time every minute
   useEffect(() => {
@@ -71,6 +74,33 @@ const SzafometrApp = () => {
       }
     }
   }, [weather]);
+
+  // Handle authentication-gated outfit saving
+  const handleAddOutfit = () => {
+    if (user) {
+      setShowAddOutfit(true);
+    } else {
+      setPendingOutfitSave(true);
+      handleLogin();
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error('Login failed:', error);
+      setPendingOutfitSave(false);
+    }
+  };
+
+  // Auto-show outfit form after login if user was trying to save outfit
+  useEffect(() => {
+    if (user && pendingOutfitSave) {
+      setShowAddOutfit(true);
+      setPendingOutfitSave(false);
+    }
+  }, [user, pendingOutfitSave]);
 
   // Weather gradients - Beautiful modern gradients based on WMO weather codes
   const getWeatherGradient = () => {
@@ -294,7 +324,8 @@ const SzafometrApp = () => {
           <div className={`transition-all duration-500 ease-in-out ${showAddOutfit ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
             <OutfitRecommendations
               recommendations={getOutfitRecommendation()}
-              onAddOutfit={() => setShowAddOutfit(true)}
+              onAddOutfit={handleAddOutfit}
+              onLogin={handleLogin}
             />
           </div>
 
