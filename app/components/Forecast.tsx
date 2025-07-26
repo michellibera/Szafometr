@@ -9,7 +9,7 @@ export default function Forecast({ hourlyData }: ForecastProps) {
     return (
       <div className="mx-6 p-4 mb-6">
         <h3 className="text-lg font-bold text-black mb-3">Prognoza na dziś</h3>
-        <div className="text-center text-gray-600">
+        <div className="text-center text-black">
           Ładowanie prognozy...
         </div>
       </div>
@@ -30,19 +30,19 @@ export default function Forecast({ hourlyData }: ForecastProps) {
       <h3 className="text-lg font-bold text-black mb-3">Prognoza na dziś</h3>
       <div className="grid grid-cols-3 gap-4 text-center">
         <div>
-          <div className="text-xs text-gray-700 mb-1">Rano</div>
+          <div className="text-xs text-black mb-1">Rano</div>
           <div className="text-lg font-bold text-black">{morningData.temp}°</div>
-          <div className="text-xs text-gray-600">{morningData.precipitationProbability}% deszczu</div>
+          <div className="text-xs text-black">{morningData.precipitationProbability}% deszczu</div>
         </div>
         <div>
-          <div className="text-xs text-gray-700 mb-1">Popołudnie</div>
+          <div className="text-xs text-black mb-1">Popołudnie</div>
           <div className="text-lg font-bold text-black">{afternoonData.temp}°</div>
-          <div className="text-xs text-gray-600">{afternoonData.precipitationProbability}% deszczu</div>
+          <div className="text-xs text-black">{afternoonData.precipitationProbability}% deszczu</div>
         </div>
         <div>
-          <div className="text-xs text-gray-700 mb-1">Wieczorem</div>
+          <div className="text-xs text-black mb-1">Wieczorem</div>
           <div className="text-lg font-bold text-black">{eveningData.temp}°</div>
-          <div className="text-xs text-gray-600">{eveningData.precipitationProbability}% deszczu</div>
+          <div className="text-xs text-black">{eveningData.precipitationProbability}% deszczu</div>
         </div>
       </div>
     </div>

@@ -243,7 +243,7 @@ const SzafometrApp = () => {
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-white mx-auto mb-4"></div>
             <div className="text-xl font-bold text-black mb-2">Ładowanie danych pogodowych...</div>
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-black">
               {locationPermission === 'pending' && 'Proszę zezwolić na dostęp do lokalizacji'}
               {locationPermission === 'denied' && 'Używamy domyślnej lokalizacji (Warszawa)'}
               {locationPermission === 'granted' && 'Pobieranie prognozy dla Twojej lokalizacji'}

@@ -46,11 +46,11 @@ export default function WeatherSection({
             <div className="text-8xl font-bold text-black">{weather.temp}°</div>
             <div className="flex flex-col">
               <div className="text-lg font-medium text-black">{weather.description}</div>
-              <div className="text-sm text-gray-700">Odczuwalna {weather.feelsLike}°</div>
+              <div className="text-sm text-black">Odczuwalna {weather.feelsLike}°</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="text-xs text-gray-600">
+            <div className="text-xs text-black">
               {mounted ? lastRefresh.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
             </div>
             <button

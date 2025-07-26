@@ -221,12 +221,12 @@ export class ClothingDecisionEngine {
    */
   private static cleanupRecommendation(rec: ClothingRecommendation): ClothingRecommendation {
     // Remove duplicates
-    rec.layers.base = [...new Set(rec.layers.base)];
-    rec.layers.mid = [...new Set(rec.layers.mid)];
-    rec.layers.outer = [...new Set(rec.layers.outer)];
-    rec.bottom = [...new Set(rec.bottom)];
-    rec.accessories = [...new Set(rec.accessories)];
-    rec.footwear = [...new Set(rec.footwear)];
+    rec.layers.base = Array.from(new Set(rec.layers.base));
+    rec.layers.mid = Array.from(new Set(rec.layers.mid));
+    rec.layers.outer = Array.from(new Set(rec.layers.outer));
+    rec.bottom = Array.from(new Set(rec.bottom));
+    rec.accessories = Array.from(new Set(rec.accessories));
+    rec.footwear = Array.from(new Set(rec.footwear));
     
     // Ensure logical layering - don't have thermal underwear with tank top
     if (rec.layers.base.includes('thermal_underwear') && rec.layers.base.includes('tank_top')) {
