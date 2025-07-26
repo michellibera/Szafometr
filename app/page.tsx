@@ -74,7 +74,7 @@ const SzafometrApp = () => {
 
   // Weather gradients - Beautiful modern gradients based on WMO weather codes
   const getWeatherGradient = () => {
-    if (!weather?.current) return 'from-purple-300 via-pink-300 to-purple-400';
+    if (!weather?.current) return 'from-sky-300 via-purple-100 to-yellow-200';
     
     const temp = weather.current.temp;
     const weatherCode = weather.current.weatherCode;
@@ -174,7 +174,7 @@ const SzafometrApp = () => {
         // Temperature-based fallbacks
         if (temp > 25) return 'from-orange-300 via-yellow-300 to-sky-300';
         if (temp < 5) return 'from-blue-300 via-slate-300 to-blue-400';
-        return 'from-purple-300 via-pink-300 to-purple-400';
+        return 'from-sky-300 via-purple-100 to-yellow-200';
     }
   };
 
@@ -239,7 +239,7 @@ const SzafometrApp = () => {
     return (
       <div className="min-h-screen w-full max-w-md mx-auto bg-gray-100 relative">
         <Header />
-        <div className="min-h-screen bg-gradient-to-br from-purple-300 via-pink-300 to-purple-400 flex flex-col items-center justify-center pt-20 pb-8">
+        <div className="min-h-screen bg-gradient-to-br from-sky-300 via-purple-100 to-yellow-200 flex flex-col items-center justify-center pt-20 pb-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-white mx-auto mb-4"></div>
             <div className="text-xl font-bold text-black mb-2">Ładowanie danych pogodowych...</div>
