@@ -126,7 +126,7 @@ export const TEMP_RULES: TemperatureRule[] = [
     advice: "Ubieraj się warstwowo. Przygotuj się na zmiany temperatury w ciągu dnia."
   },
   {
-    range: { min: 10, max: 15 },
+    range: { min: 10, max: 16 },
     description: "Umiarkowanie chłodno",
     base: ["long_sleeve_shirt"],
     mid: ["cardigan"],
@@ -137,11 +137,11 @@ export const TEMP_RULES: TemperatureRule[] = [
     advice: "Lekka kurtka może się przydać. Można ją zdjąć w ciągu dnia."
   },
   {
-    range: { min: 15, max: 20 },
+    range: { min: 16, max: 20 },
     description: "Łagodnie",
-    base: ["long_sleeve_shirt"],
+    base: ["t_shirt"],
     mid: [],
-    outer: ["light_jacket"],
+    outer: [],
     bottom: ["long_trousers"],
     accessories: [],
     footwear: ["sneakers"],
