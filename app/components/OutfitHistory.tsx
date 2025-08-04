@@ -25,13 +25,10 @@ export default function OutfitHistory({ outfitHistory }: OutfitHistoryProps) {
             <div className="flex justify-between items-start mb-2">
               <div className="flex-1">
                 <span className="text-sm font-medium text-black">{entry.outfit}</span>
-                {entry.clo && (
-                  <div className="text-xs text-black/70 mt-1">CLO: {entry.clo.toFixed(2)}</div>
-                )}
               </div>
-              <span className="text-xs text-black">{entry.temp}°</span>
             </div>
             <div className="flex items-center gap-2">
+              <span className="text-xs text-black">{entry.temp}°</span>
               <span className="text-xs text-black font-medium">{entry.comfort}</span>
               <span className="text-xs text-black">
                 {entry.date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}
