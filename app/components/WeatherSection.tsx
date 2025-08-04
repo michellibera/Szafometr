@@ -48,7 +48,7 @@ export default function WeatherSection({
               <div className="text-sm font-bold text-black ml-2">Odczuwalna {weather.feelsLike}°</div>
             </div>
             <div className="flex flex-col">
-              <div className="text-lg font-medium text-black">{weather.description}</div>
+              <div className="text-xl font-medium text-black">{weather.description}</div>
               <div className="text-sm text-black">{weather.precipitation}% deszczu</div>
               <div className="text-sm text-black">Wiatr {weather.windSpeed} km/h</div>
               <div className="text-sm text-black">Wilgotność {weather.humidity}%</div>
