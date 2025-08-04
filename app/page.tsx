@@ -16,13 +16,15 @@ interface OutfitEntry {
   comfort: string;
   date: Date;
   temp: number;
+  recommendedItems?: string[];
+  clo?: number;
 }
 
 const SzafometrApp = () => {
   const { user, signInWithGoogle } = useAuth();
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [time, setTime] = useState(new Date());
-  const [showAddOutfit, setShowAddOutfit] = useState(false);
+  const [showRateOutfit, setShowRateOutfit] = useState(false);
   const [currentOutfit, setCurrentOutfit] = useState('');
   const [comfortLevel, setComfortLevel] = useState('');
   const [outfitHistory, setOutfitHistory] = useState<OutfitEntry[]>([]);
@@ -78,7 +80,7 @@ const SzafometrApp = () => {
   // Handle authentication-gated outfit saving
   const handleAddOutfit = () => {
     if (user) {
-      setShowAddOutfit(true);
+      setShowRateOutfit(true);
     } else {
       setPendingOutfitSave(true);
       handleLogin();
@@ -97,7 +99,7 @@ const SzafometrApp = () => {
   // Auto-show outfit form after login if user was trying to save outfit
   useEffect(() => {
     if (user && pendingOutfitSave) {
-      setShowAddOutfit(true);
+      setShowRateOutfit(true);
       setPendingOutfitSave(false);
     }
   }, [user, pendingOutfitSave]);
@@ -251,16 +253,19 @@ const SzafometrApp = () => {
   };
 
   const handleSaveOutfit = () => {
-    if (currentOutfit && comfortLevel) {
+    if (comfortLevel && clothingRecommendation) {
+      const recommendedItems = getOutfitRecommendation();
       setOutfitHistory([...outfitHistory, {
-        outfit: currentOutfit,
+        outfit: recommendedItems.join(', '),
         comfort: comfortLevel,
         date: new Date(),
-        temp: weather?.current?.temp || 0
+        temp: weather?.current?.temp || 0,
+        recommendedItems: recommendedItems,
+        clo: clothingRecommendation.clo
       }]);
       setCurrentOutfit('');
       setComfortLevel('');
-      setShowAddOutfit(false);
+      setShowRateOutfit(false);
     }
   };
 
@@ -321,7 +326,7 @@ const SzafometrApp = () => {
 
         {/* Outfit Recommendations or Add Outfit Form */}
         <div className="mx-6 mb-6 relative overflow-hidden">
-          <div className={`transition-all duration-500 ease-in-out ${showAddOutfit ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+          <div className={`transition-all duration-500 ease-in-out ${showRateOutfit ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
             <OutfitRecommendations
               recommendations={getOutfitRecommendation()}
               onAddOutfit={handleAddOutfit}
@@ -329,15 +334,15 @@ const SzafometrApp = () => {
             />
           </div>
 
-          <div className={`absolute top-0 w-full transition-all duration-500 ease-in-out ${showAddOutfit ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
+          <div className={`absolute top-0 w-full transition-all duration-500 ease-in-out ${showRateOutfit ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
             <AddOutfitForm
-              currentOutfit={currentOutfit}
+              recommendedItems={getOutfitRecommendation()}
               comfortLevel={comfortLevel}
-              onOutfitChange={setCurrentOutfit}
               onComfortChange={setComfortLevel}
               onSave={handleSaveOutfit}
-              onCancel={() => setShowAddOutfit(false)}
-              isDisabled={!currentOutfit || !comfortLevel}
+              onCancel={() => setShowRateOutfit(false)}
+              isDisabled={!comfortLevel}
+              clo={clothingRecommendation?.clo ?? 1}
             />
           </div>
         </div>

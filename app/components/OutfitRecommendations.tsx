@@ -26,7 +26,7 @@ export default function OutfitRecommendations({ recommendations, onAddOutfit, on
         className="w-full bg-black text-white rounded-full py-3 px-5 font-bold text-base hover:bg-black/80 transition-colors flex items-center justify-center gap-2"
       >
         <Plus className="w-4 h-4" />
-        {user ? "Zapisz dzisiejszy strój" : "Zaloguj się, aby zapisać strój"}
+        {user ? "Oceń tę rekomendację" : "Zaloguj się, aby ocenić rekomendację"}
       </button>
     </div>
   );
