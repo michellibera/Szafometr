@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can only access their own outfit ratings
+    match /users/{userId}/outfit-ratings/{ratingId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Validate the data structure on write operations
+      allow create: if request.auth != null 
+        && request.auth.uid == userId
+        && isValidRating(request.resource.data);
+      
+      allow update: if request.auth != null 
+        && request.auth.uid == userId
+        && isValidRating(request.resource.data);
+    }
+    
+    // Helper function to validate rating data structure
+    function isValidRating(data) {
+      return data.keys().hasAll(['userId', 'createdAt', 'weather', 'recommendation', 'rating'])
+        && data.userId is string
+        && data.weather.keys().hasAll(['temp', 'feelsLike', 'humidity', 'windSpeed', 'cloudCover', 'isDay', 'weatherCode'])
+        && data.recommendation.keys().hasAll(['items', 'clo', 'season', 'confidence'])
+        && data.recommendation.items is list
+        && data.recommendation.clo is number
+        && data.rating.keys().hasAll(['comfort', 'timestamp'])
+        && data.rating.comfort in ['Za zimno ❄️', 'W sam raz ✅', 'Za gorąco 🔥'];
+    }
+    
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

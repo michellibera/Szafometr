@@ -10,6 +10,7 @@ import OutfitHistory from './components/OutfitHistory';
 import { WeatherData, HourlyWeather, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
 import { ClothingDecisionEngine, FormattedClothingRecommendation } from '@/lib/clothing/clothingEngine';
 import { useAuth } from '@/context/AuthContext';
+import { useOutfitRatingsLegacy } from '@/hooks/useOutfitRatings';
 
 interface OutfitEntry {
   outfit: string;
@@ -28,6 +29,7 @@ const SzafometrApp = () => {
   const [currentOutfit, setCurrentOutfit] = useState('');
   const [comfortLevel, setComfortLevel] = useState('');
   const [outfitHistory, setOutfitHistory] = useState<OutfitEntry[]>([]);
+  const { outfitHistory: firebaseRatings, loading: ratingsLoading, error: ratingsError, saveRating, clearError } = useOutfitRatingsLegacy();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
@@ -252,17 +254,50 @@ const SzafometrApp = () => {
     return ClothingDecisionEngine.getSimpleRecommendation(weather);
   };
 
-  const handleSaveOutfit = () => {
-    if (comfortLevel && clothingRecommendation) {
+  const handleSaveOutfit = async () => {
+    if (comfortLevel && clothingRecommendation && weather?.current) {
       const recommendedItems = getOutfitRecommendation();
+      
+      // Save to local state (Phase 1: Parallel implementation)
       setOutfitHistory([...outfitHistory, {
         outfit: recommendedItems.join(', '),
         comfort: comfortLevel,
         date: new Date(),
-        temp: weather?.current?.temp || 0,
+        temp: weather.current.temp,
         recommendedItems: recommendedItems,
         clo: clothingRecommendation.clo
       }]);
+
+      // Save to Firebase if user is authenticated
+      if (user) {
+        try {
+          await saveRating(
+            {
+              temp: weather.current.temp,
+              feelsLike: weather.current.feelsLike,
+              humidity: weather.current.humidity,
+              windSpeed: weather.current.windSpeed,
+              cloudCover: weather.current.cloudCover,
+              isDay: weather.current.isDay,
+              weatherCode: weather.current.weatherCode
+            },
+            {
+              items: recommendedItems,
+              clo: clothingRecommendation.clo,
+              season: clothingRecommendation.season,
+              confidence: clothingRecommendation.confidence
+            },
+            {
+              comfort: comfortLevel as 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+              timestamp: new Date()
+            }
+          );
+        } catch (error) {
+          console.error('Failed to save rating to Firebase:', error);
+          // Continue anyway - local save still worked
+        }
+      }
+
       setCurrentOutfit('');
       setComfortLevel('');
       setShowRateOutfit(false);
@@ -350,7 +385,12 @@ const SzafometrApp = () => {
 
         <Forecast hourlyData={weather?.hourly || []} />
 
-        <OutfitHistory outfitHistory={outfitHistory} />
+        <OutfitHistory 
+          outfitHistory={user ? firebaseRatings : outfitHistory} 
+          loading={user ? ratingsLoading : false}
+          error={user ? ratingsError : null}
+          onClearError={clearError}
+        />
       </div>
     </div>
   );
