@@ -51,7 +51,7 @@ export class ClothingDecisionEngine {
     return recommendation;
   }
 
-  private static calculateClo(weather: WeatherData): number {
+  static calculateClo(weather: WeatherData): number {
     const baseClo = this.calculateBaseClo(weather.current.feelsLike);
     const deltaCloWind = this.calculateDeltaCloWind(weather.current.windSpeed);
     const deltaCloHumidity = this.calculateDeltaCloHumidity(weather.current.humidity, weather.current.temp);
@@ -112,6 +112,39 @@ export class ClothingDecisionEngine {
    */
   static getSimpleRecommendation(weather: WeatherData): string[] {
     const recommendation = this.getRecommendation(weather);
+    
+    // Return the clothing items directly
+    return recommendation.items.filter(item => item && item.trim().length > 0);
+  }
+
+  static getPersonalizedRecommendation(weather: WeatherData, personalizedCLO: number): ClothingRecommendation {
+    const outfit = findOutfitByCLO(personalizedCLO);
+    const seasonInfo = getCLOSeasonInfo(personalizedCLO);
+
+    const originalCLO = this.calculateClo(weather);
+    const bias = personalizedCLO - originalCLO;
+
+    const recommendation: ClothingRecommendation = {
+      items: [...outfit.items],
+      clo: Math.round(personalizedCLO * 100) / 100,
+      season: seasonInfo.season,
+      advice: `${seasonInfo.description} (CLO: ${Math.round(personalizedCLO * 100) / 100})`,
+      reasoning: [
+        `Temperatura: ${weather.current.feelsLike}°C`,
+        `Wartość CLO: ${Math.round(personalizedCLO * 100) / 100}`,
+        `Sezon: ${seasonInfo.season}`,
+        `Dostosowanie do preferencji użytkownika (bias): ${Math.round(bias * 100) / 100}`
+      ],
+      confidence: bias !== 0 ? 95 : 90
+    };
+    return recommendation;
+  }
+
+  /**
+   * Get simple personalized recommendation for existing UI - returns clothing items as array
+   */
+  static getSimplePersonalizedRecommendation(weather: WeatherData, personalizedCLO: number): string[] {
+    const recommendation = this.getPersonalizedRecommendation(weather, personalizedCLO);
     
     // Return the clothing items directly
     return recommendation.items.filter(item => item && item.trim().length > 0);

@@ -7,10 +7,12 @@ import OutfitRecommendations from './components/OutfitRecommendations';
 import AddOutfitForm from './components/AddOutfitForm';
 import Forecast from './components/Forecast';
 import OutfitHistory from './components/OutfitHistory';
+import PersonalizationStatus from './components/PersonalizationStatus';
 import { WeatherData, HourlyWeather, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
 import { ClothingDecisionEngine, FormattedClothingRecommendation } from '@/lib/clothing/clothingEngine';
 import { useAuth } from '@/context/AuthContext';
 import { useOutfitRatingsLegacy } from '@/hooks/useOutfitRatings';
+import { usePersonalization } from '@/hooks/usePersonalization';
 
 interface OutfitEntry {
   outfit: string;
@@ -30,6 +32,7 @@ const SzafometrApp = () => {
   const [comfortLevel, setComfortLevel] = useState('');
   const [outfitHistory, setOutfitHistory] = useState<OutfitEntry[]>([]);
   const { outfitHistory: firebaseRatings, loading: ratingsLoading, error: ratingsError, saveRating, clearError } = useOutfitRatingsLegacy();
+  const { profile: personalizationProfile, loading: personalizationLoading, getPersonalizedCLO, updateFromRating: updatePersonalizationFromRating, getUserInsights } = usePersonalization();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
@@ -66,18 +69,29 @@ const SzafometrApp = () => {
     loadInitialWeather();
   }, []);
 
-  // Generate clothing recommendation when weather data changes
+  // Generate clothing recommendation when weather data or personalization changes
   useEffect(() => {
     if (weather) {
       try {
-        const recommendation = ClothingDecisionEngine.getRecommendation(weather);
+        let recommendation;
+        
+        if (user && personalizationProfile && !personalizationLoading) {
+          // User is logged in and has personalization data - use personalized recommendation
+          const baseCLO = ClothingDecisionEngine.calculateClo(weather);
+          const personalizedCLO = getPersonalizedCLO(baseCLO);
+          recommendation = ClothingDecisionEngine.getPersonalizedRecommendation(weather, personalizedCLO);
+        } else {
+          // Use standard scientific recommendation
+          recommendation = ClothingDecisionEngine.getRecommendation(weather);
+        }
+        
         const formatted = ClothingDecisionEngine.formatRecommendation(recommendation);
         setClothingRecommendation(formatted);
       } catch (error) {
         console.error('Error generating clothing recommendation:', error);
       }
     }
-  }, [weather]);
+  }, [weather, user, personalizationProfile, personalizationLoading, getPersonalizedCLO]);
 
   // Handle authentication-gated outfit saving
   const handleAddOutfit = () => {
@@ -230,7 +244,7 @@ const SzafometrApp = () => {
     }
   }
 
-  // Outfit recommendations using intelligent clothing engine
+  // Outfit recommendations using intelligent clothing engine with personalization
   const getOutfitRecommendation = () => {
     if (!weather?.current) {
       return [
@@ -250,7 +264,14 @@ const SzafometrApp = () => {
       ];
     }
     
-    // Convert detailed recommendation to simple 4-item format for existing UI
+    // Use personalized recommendation if available
+    if (user && personalizationProfile && !personalizationLoading) {
+      const baseCLO = ClothingDecisionEngine.calculateClo(weather);
+      const personalizedCLO = getPersonalizedCLO(baseCLO);
+      return ClothingDecisionEngine.getSimplePersonalizedRecommendation(weather, personalizedCLO);
+    }
+    
+    // Fall back to standard recommendation
     return ClothingDecisionEngine.getSimpleRecommendation(weather);
   };
 
@@ -268,9 +289,10 @@ const SzafometrApp = () => {
         clo: clothingRecommendation.clo
       }]);
 
-      // Save to Firebase if user is authenticated
+      // Save to Firebase and update personalization if user is authenticated
       if (user) {
         try {
+          // Save rating for history
           await saveRating(
             {
               temp: weather.current.temp,
@@ -292,6 +314,20 @@ const SzafometrApp = () => {
               timestamp: new Date()
             }
           );
+
+          // Update personalization (machine learning happens here!)
+          if (personalizationProfile) {
+            try {
+              await updatePersonalizationFromRating(
+                comfortLevel as 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+                clothingRecommendation.clo,
+                weather.current
+              );
+            } catch (error) {
+              console.error('Failed to update personalization:', error);
+              // Don't block the UI - personalization is nice-to-have
+            }
+          }
         } catch (error) {
           console.error('Failed to save rating to Firebase:', error);
           // Continue anyway - local save still worked
@@ -366,6 +402,13 @@ const SzafometrApp = () => {
               recommendations={getOutfitRecommendation()}
               onAddOutfit={handleAddOutfit}
               onLogin={handleLogin}
+              personalizationStatus={
+                <PersonalizationStatus 
+                  profile={personalizationProfile}
+                  loading={personalizationLoading}
+                  isActive={!!(user && personalizationProfile && !personalizationLoading)}
+                />
+              }
             />
           </div>
 

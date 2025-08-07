@@ -34,7 +34,15 @@ export function useOutfitRatings(): UseOutfitRatingsReturn {
       10 // Limit to last 10 ratings
     );
 
-    return unsubscribe;
+    return () => {
+      try {
+        if (unsubscribe && typeof unsubscribe === 'function') {
+          unsubscribe();
+        }
+      } catch (error) {
+        console.error('Error cleaning up ratings subscription:', error);
+      }
+    };
   }, [user?.uid]);
 
   // Save a new rating
