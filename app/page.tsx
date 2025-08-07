@@ -140,18 +140,6 @@ const SzafometrApp = () => {
       return 'from-slate-400 via-blue-400 to-slate-500'; // Regular night
     }
     
-    // Dawn/Sunrise (5-8 AM)
-    if (hour >= 5 && hour <= 8) {
-      if (weatherCode <= 1) return 'from-pink-300 via-orange-300 to-yellow-300'; // Clear dawn
-      return 'from-pink-300 via-purple-300 to-orange-300'; // Cloudy dawn
-    }
-    
-    // Sunset (17-20 PM)
-    if (hour >= 17 && hour <= 20) {
-      if (weatherCode <= 1) return 'from-orange-400 via-red-400 to-purple-500'; // Clear sunset
-      return 'from-red-400 via-purple-400 to-slate-500'; // Cloudy sunset
-    }
-    
     // WMO Weather Code mapping for daytime
     switch (weatherCode) {
       // Clear conditions (0-1)
