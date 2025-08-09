@@ -381,6 +381,9 @@ const SzafometrApp = () => {
               recommendations={getOutfitRecommendation()}
               onAddOutfit={handleAddOutfit}
               onLogin={handleLogin}
+              baseClo={clothingRecommendation?.baseClo ?? clothingRecommendation?.clo}
+              personalizedClo={clothingRecommendation?.personalizedClo}
+              isPersonalized={clothingRecommendation?.personalizedClo !== undefined && clothingRecommendation.personalizedClo !== null}
             />
           </div>
 

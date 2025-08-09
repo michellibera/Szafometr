@@ -5,9 +5,19 @@ interface OutfitRecommendationsProps {
   recommendations: string[];
   onAddOutfit: () => void;
   onLogin?: () => void;
+  baseClo?: number;
+  personalizedClo?: number;
+  isPersonalized?: boolean;
 }
 
-export default function OutfitRecommendations({ recommendations, onAddOutfit, onLogin }: OutfitRecommendationsProps) {
+export default function OutfitRecommendations({
+   recommendations,
+   onAddOutfit,
+   onLogin,
+   baseClo,
+   personalizedClo,
+   isPersonalized
+  }: OutfitRecommendationsProps) {
   const { user } = useAuth();
   return (
     <div className={`p-5 transition-all duration-500 ease-in-out translate-x-0 opacity-100`}>
@@ -22,6 +32,11 @@ export default function OutfitRecommendations({ recommendations, onAddOutfit, on
               <span className="text-sm text-black font-medium">• {item}</span>
             </div>
           ))}
+      </div>
+      <div className='flex flex-col mb-5 text-xs text-black'>
+        <span>Rekomendacje bazują na obliczonym współczynniku termoizolacyjności CLO:</span> 
+        <span>• dla obecnych warunków pogodowych ({baseClo})</span>
+        <span>• korekta na bazie ocen ({isPersonalized ? personalizedClo : 'brak'}).</span>
       </div>
       <button
         onClick={user ? onAddOutfit : onLogin}

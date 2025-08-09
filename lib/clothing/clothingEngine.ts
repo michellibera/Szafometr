@@ -4,6 +4,8 @@ import { findOutfitByCLO, getCLOSeasonInfo, CLOOutfit } from './cloClothingData'
 export interface ClothingRecommendation {
   items: string[];
   clo: number;
+  baseClo?: number;
+  personalizedClo?: number;
   season: string;
   advice: string;
   reasoning: string[];
@@ -13,6 +15,8 @@ export interface ClothingRecommendation {
 export interface FormattedClothingRecommendation {
   items: string[];
   clo: number;
+  baseClo?: number;
+  personalizedClo?: number;
   season: string;
   advice: string;
   reasoning: string[];
@@ -100,6 +104,8 @@ export class ClothingDecisionEngine {
     return {
       items: [...rec.items],
       clo: rec.clo,
+      baseClo: rec.baseClo,
+      personalizedClo: rec.personalizedClo,
       season: rec.season,
       advice: rec.advice,
       reasoning: rec.reasoning,
@@ -127,6 +133,8 @@ export class ClothingDecisionEngine {
     const recommendation: ClothingRecommendation = {
       items: [...outfit.items],
       clo: Math.round(personalizedCLO * 100) / 100,
+      baseClo: originalCLO,
+      personalizedClo: bias,
       season: seasonInfo.season,
       advice: `${seasonInfo.description} (CLO: ${Math.round(personalizedCLO * 100) / 100})`,
       reasoning: [
