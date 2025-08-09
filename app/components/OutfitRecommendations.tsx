@@ -1,21 +1,18 @@
 import { Plus } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { ReactNode } from 'react';
 
 interface OutfitRecommendationsProps {
   recommendations: string[];
   onAddOutfit: () => void;
   onLogin?: () => void;
-  personalizationStatus?: ReactNode;
 }
 
-export default function OutfitRecommendations({ recommendations, onAddOutfit, onLogin, personalizationStatus }: OutfitRecommendationsProps) {
+export default function OutfitRecommendations({ recommendations, onAddOutfit, onLogin }: OutfitRecommendationsProps) {
   const { user } = useAuth();
   return (
     <div className={`p-5 transition-all duration-500 ease-in-out translate-x-0 opacity-100`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-2xl font-bold text-black">Co założyć?</h3>
-        {personalizationStatus}
       </div>
       <div className="space-y-3 mb-8">
         {recommendations

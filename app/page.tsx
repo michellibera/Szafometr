@@ -7,21 +7,12 @@ import OutfitRecommendations from './components/OutfitRecommendations';
 import AddOutfitForm from './components/AddOutfitForm';
 import Forecast from './components/Forecast';
 import OutfitHistory from './components/OutfitHistory';
-import PersonalizationStatus from './components/PersonalizationStatus';
-import { WeatherData, HourlyWeather, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
+import { WeatherData, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
 import { ClothingDecisionEngine, FormattedClothingRecommendation } from '@/lib/clothing/clothingEngine';
 import { useAuth } from '@/context/AuthContext';
 import { useOutfitRatingsLegacy } from '@/hooks/useOutfitRatings';
 import { usePersonalization } from '@/hooks/usePersonalization';
-
-interface OutfitEntry {
-  outfit: string;
-  comfort: string;
-  date: Date;
-  temp: number;
-  recommendedItems?: string[];
-  clo?: number;
-}
+import { OutfitEntry } from '@/types/outfit';
 
 const SzafometrApp = () => {
   const { user, signInWithGoogle } = useAuth();
@@ -32,7 +23,7 @@ const SzafometrApp = () => {
   const [comfortLevel, setComfortLevel] = useState('');
   const [outfitHistory, setOutfitHistory] = useState<OutfitEntry[]>([]);
   const { outfitHistory: firebaseRatings, loading: ratingsLoading, error: ratingsError, saveRating, clearError } = useOutfitRatingsLegacy();
-  const { profile: personalizationProfile, loading: personalizationLoading, getPersonalizedCLO, updateFromRating: updatePersonalizationFromRating, getUserInsights } = usePersonalization();
+  const { profile: personalizationProfile, loading: personalizationLoading, getPersonalizedCLO, updateFromRating: updatePersonalizationFromRating } = usePersonalization();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
@@ -390,13 +381,6 @@ const SzafometrApp = () => {
               recommendations={getOutfitRecommendation()}
               onAddOutfit={handleAddOutfit}
               onLogin={handleLogin}
-              personalizationStatus={
-                <PersonalizationStatus 
-                  profile={personalizationProfile}
-                  loading={personalizationLoading}
-                  isActive={!!(user && personalizationProfile && !personalizationLoading)}
-                />
-              }
             />
           </div>
 

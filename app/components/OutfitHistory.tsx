@@ -1,11 +1,4 @@
-interface OutfitEntry {
-  outfit: string;
-  comfort: string;
-  date: Date | null | undefined;
-  temp: number;
-  recommendedItems?: string[];
-  clo?: number;
-}
+import { OutfitEntry } from '@/types/outfit';
 
 interface OutfitHistoryProps {
   outfitHistory: OutfitEntry[];
@@ -81,6 +74,7 @@ export default function OutfitHistory({ outfitHistory, loading, error, onClearEr
   return (
     <div className="mx-6 p-4 mb-6">
       <h3 className="text-lg font-bold text-black mb-3">Twoje oceny rekomendacji</h3>
+      <div className="text-sm text-black/70 mb-3">Łącznie ocen: {outfitHistory.length}</div>
       <div className="space-y-3">
         {outfitHistory.slice(-3).map((entry, i) => (
           <div key={i} className="border border-black/20 rounded p-3">

@@ -180,46 +180,4 @@ export class PersonalBiasLearner {
         return Math.max(0.3, Math.min(3.0, personalizedCLO));
     }
 
-    static getUserInsights(profile: UserPersonalizationProfile): {
-        temperaturePreference: string;
-        reliabilityStatus: string;
-        learningProgress: string;
-        recommendationQuality: string;
-    } {
-        const temperaturePreference = this.getTemperaturePreferenceText(profile.personalBias);
-        const reliabilityStatus = this.getReliabilityStatus(profile.confidence);
-        const learningProgress = this.getLearningProgress(profile.totalRatings);
-        const recommendationQuality = this.getRecomendationQuality(profile.recentAccuracy);
-
-        return {
-            temperaturePreference,
-            reliabilityStatus,
-            learningProgress,
-            recommendationQuality
-        };
-    }
-
-    private static getTemperaturePreferenceText(bias: number): string {
-        if (bias > 0.2) return "Ubierasz się cieplej niż średnia";
-        if (bias < -0.2) return "Ubierasz się lżej niż średnia";
-        return "Ubierasz się podobnie do średniej";
-    }
-
-    private static getReliabilityStatus(confidence: number): string {
-        if (confidence > 0.8) return "Wysoka pewność rekomendacji";
-        if (confidence > 0.5) return "Średnia pewność rekomendacji";
-        return "Niska pewność - potrzeba więcej danych";
-    }
-
-    private static getLearningProgress(totalRatings: number): string {
-        if (totalRatings < 5) return 'Początkowa faza uczenia się';
-        if (totalRatings < 15) return 'Aktywne uczenie się';
-        return 'Stabilne rekomendacje';
-    }
-
-    private static getRecomendationQuality(recentAccuracy: number): string {
-        if (recentAccuracy > 0.8) return "Wysoka jakość rekomendacji";
-        if (recentAccuracy > 0.5) return "Dobra jakość rekomendacji";
-        return "Niska jakość - potrzebujesz więcej danych";
-    }
 }

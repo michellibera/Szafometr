@@ -14,7 +14,6 @@ interface UsePersonalizationReturn {
     predictedCLO: number,
     weather: any
   ) => Promise<void>;
-  getUserInsights: () => ReturnType<typeof PersonalBiasLearner.getUserInsights> | null;
   clearError: () => void;
 }
 
@@ -123,16 +122,6 @@ export function usePersonalization(): UsePersonalizationReturn {
     }
   }, [profile, user]); // Re-create function when profile or user changes
 
-  // Get user insights (for displaying personalization status in UI)
-  const getUserInsights = useCallback(() => {
-    if (!profile) return null;
-    
-    // Returns insights like:
-    // - "Ubierasz się cieplej niż średnia" 
-    // - "Wysoka pewność rekomendacji"
-    // - "System dobrze Cię poznał"
-    return PersonalBiasLearner.getUserInsights(profile);
-  }, [profile]);
 
   // Clear error state
   const clearError = useCallback(() => {
@@ -146,7 +135,6 @@ export function usePersonalization(): UsePersonalizationReturn {
     error,                // Any error that occurred
     getPersonalizedCLO,   // Function to get personalized recommendation
     updateFromRating,     // Function to learn from user feedback
-    getUserInsights,      // Function to get user insights for UI
     clearError            // Function to clear errors
   };
 }
