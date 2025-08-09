@@ -409,6 +409,13 @@ const SzafometrApp = () => {
           error={user ? ratingsError : null}
           onClearError={clearError}
         />
+
+        {/* Footer */}
+        <footer className="mt-8 pb-4 px-6">
+          <div className="text-center text-xs text-black/60">
+            © 2025 Michel Libera. All rights reserved.
+          </div>
+        </footer>
       </div>
     </div>
   );
