@@ -1,0 +1,107 @@
+{
+  "Metadata": {
+    "title": "Szafometr",
+    "description": "Aplikacja do zarządzania strojem w zależności od pogody"
+  },
+  "Header": {
+    "appName": "Szafometr",
+    "login": "Zaloguj",
+    "logout": "Wyloguj"
+  },
+  "Weather": {
+    "loading": "Ładowanie danych pogodowych...",
+    "feelsLike": "Odczuwalna {temp}°",
+    "rain": "{percent}% deszczu",
+    "wind": "Wiatr {speed} km/h",
+    "humidity": "Wilgotność {percent}%",
+    "clouds": "Chmury {percent}% pokrycia",
+    "descriptions": {
+      "0": "Bezchmurnie",
+      "1": "Głównie bezchmurnie",
+      "2": "Częściowo pochmurnie",
+      "3": "Pochmurnie",
+      "45": "Mgliście",
+      "48": "Mgła z szronem",
+      "51": "Lekka mżawka",
+      "53": "Umiarkowana mżawka",
+      "55": "Gęsta mżawka",
+      "56": "Lekka marznąca mżawka",
+      "57": "Gęsta marznąca mżawka",
+      "61": "Lekki deszcz",
+      "63": "Umiarkowany deszcz",
+      "65": "Silny deszcz",
+      "66": "Lekki marznący deszcz",
+      "67": "Silny marznący deszcz",
+      "71": "Lekki śnieg",
+      "73": "Umiarkowany śnieg",
+      "75": "Silny śnieg",
+      "77": "Ziarna śniegu",
+      "80": "Lekkie opady deszczu",
+      "81": "Umiarkowane opady deszczu",
+      "82": "Gwałtowne opady deszczu",
+      "85": "Lekkie opady śniegu",
+      "86": "Silne opady śniegu",
+      "95": "Burza",
+      "96": "Burza z lekkim gradem",
+      "99": "Burza z silnym gradem",
+      "unknown": "Nieznane warunki"
+    }
+  },
+  "OutfitRecommendations": {
+    "title": "Co założyć?",
+    "cloInfo": "Rekomendacje bazują na obliczonym współczynniku termoizolacyjności CLO:",
+    "cloBase": "dla obecnych warunków pogodowych ({clo})",
+    "cloPersonalized": "korekta na bazie ocen ({clo})",
+    "cloNoPersonalization": "brak",
+    "rateButton": "Oceń tę rekomendację",
+    "loginToRate": "Zaloguj się, aby ocenić rekomendację"
+  },
+  "AddOutfitForm": {
+    "title": "Jak się czujesz?",
+    "saveButton": "Zapisz ocenę",
+    "comfort": {
+      "tooCold": "Za zimno ❄️",
+      "perfect": "W sam raz ✅",
+      "tooHot": "Za gorąco 🔥"
+    }
+  },
+  "Forecast": {
+    "title": "Prognoza na dziś",
+    "loading": "Ładowanie prognozy...",
+    "morning": "Rano",
+    "afternoon": "Popołudnie",
+    "evening": "Wieczorem",
+    "rain": "{percent}% deszczu"
+  },
+  "OutfitHistory": {
+    "title": "Twoje oceny rekomendacji",
+    "loading": "Ładowanie ocen...",
+    "errorTitle": "Błąd ładowania ocen",
+    "noRatings": "Brak zapisanych ocen",
+    "noRatingsHint": "Oceń pierwszą rekomendację, aby zobaczyć historię",
+    "totalRatings": "Łącznie ocen: {count}",
+    "dateError": {
+      "noDate": "Brak daty",
+      "invalid": "Nieprawidłowa data",
+      "error": "Błąd daty"
+    }
+  },
+  "Loading": {
+    "weather": "Ładowanie danych pogodowych...",
+    "pleaseWait": "Proszę czekać",
+    "generatingRecommendations": "Generowanie rekomendacji...",
+    "analyzingConditions": "Analizowanie warunków pogodowych",
+    "locationPermission": {
+      "pending": "Proszę zezwolić na dostęp do lokalizacji",
+      "denied": "Używamy domyślnej lokalizacji (Warszawa)",
+      "granted": "Pobieranie prognozy dla Twojej lokalizacji"
+    }
+  },
+  "Errors": {
+    "weatherFetch": "Błąd pobierania pogody",
+    "locationDenied": "Używamy danych dla Warszawy"
+  },
+  "Footer": {
+    "copyright": "© 2025 Michel Libera. All rights reserved."
+  }
+}

@@ -12,9 +12,11 @@
     "firebase": "^9.23.0",
     "lucide-react": "^0.292.0",
     "next": "^14.0.0",
+    "next-intl": "^4.5.8",
     "openmeteo": "^1.2.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20.8.0",

@@ -2,10 +2,13 @@
 
 import { LogIn, LogOut, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Header() {
   const { user, loading, signInWithGoogle, signOut } = useAuth();
+  const t = useTranslations('Header');
   const handleAuthAction = async () => {
     if (user) {
       await signOut();
@@ -16,9 +19,10 @@ export default function Header() {
 
   return (
     <div className="absolute top-6 left-6 right-6 z-50 flex justify-between items-center">
-      <h1 className="text-2xl font-bold text-black">Szafometr</h1>
-      
+      <h1 className="text-2xl font-bold text-black">{t('appName')}</h1>
+
       <div className="flex items-center gap-3">
+        <LanguageSwitcher />
         {user && (
           <div className="flex items-center gap-2">
             {user.photoURL && (
@@ -46,12 +50,12 @@ export default function Header() {
           ) : user ? (
             <>
               <LogOut className="w-4 h-4 text-black/80" />
-              <span className="text-sm font-medium text-black/80">Wyloguj</span>
+              <span className="text-sm font-medium text-black/80">{t('logout')}</span>
             </>
           ) : (
             <>
               <LogIn className="w-4 h-4 text-black/80" />
-              <span className="text-sm font-medium text-black/80">Zaloguj</span>
+              <span className="text-sm font-medium text-black/80">{t('login')}</span>
             </>
           )}
         </button>

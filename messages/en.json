@@ -1,0 +1,107 @@
+{
+  "Metadata": {
+    "title": "Szafometr - Weather Wardrobe Assistant",
+    "description": "Smart clothing recommendations based on weather conditions"
+  },
+  "Header": {
+    "appName": "Szafometr",
+    "login": "Log in",
+    "logout": "Log out"
+  },
+  "Weather": {
+    "loading": "Loading weather data...",
+    "feelsLike": "Feels like {temp}°",
+    "rain": "{percent}% chance of rain",
+    "wind": "Wind {speed} km/h",
+    "humidity": "Humidity {percent}%",
+    "clouds": "Clouds {percent}% coverage",
+    "descriptions": {
+      "0": "Clear sky",
+      "1": "Mainly clear",
+      "2": "Partly cloudy",
+      "3": "Overcast",
+      "45": "Foggy",
+      "48": "Depositing rime fog",
+      "51": "Light drizzle",
+      "53": "Moderate drizzle",
+      "55": "Dense drizzle",
+      "56": "Light freezing drizzle",
+      "57": "Dense freezing drizzle",
+      "61": "Slight rain",
+      "63": "Moderate rain",
+      "65": "Heavy rain",
+      "66": "Light freezing rain",
+      "67": "Heavy freezing rain",
+      "71": "Slight snow",
+      "73": "Moderate snow",
+      "75": "Heavy snow",
+      "77": "Snow grains",
+      "80": "Slight rain showers",
+      "81": "Moderate rain showers",
+      "82": "Violent rain showers",
+      "85": "Slight snow showers",
+      "86": "Heavy snow showers",
+      "95": "Thunderstorm",
+      "96": "Thunderstorm with slight hail",
+      "99": "Thunderstorm with heavy hail",
+      "unknown": "Unknown conditions"
+    }
+  },
+  "OutfitRecommendations": {
+    "title": "What to wear?",
+    "cloInfo": "Recommendations based on calculated CLO thermal insulation coefficient:",
+    "cloBase": "for current weather conditions ({clo})",
+    "cloPersonalized": "adjusted based on your ratings ({clo})",
+    "cloNoPersonalization": "none",
+    "rateButton": "Rate this recommendation",
+    "loginToRate": "Log in to rate recommendations"
+  },
+  "AddOutfitForm": {
+    "title": "How do you feel?",
+    "saveButton": "Save rating",
+    "comfort": {
+      "tooCold": "Too cold ❄️",
+      "perfect": "Just right ✅",
+      "tooHot": "Too hot 🔥"
+    }
+  },
+  "Forecast": {
+    "title": "Today's forecast",
+    "loading": "Loading forecast...",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "rain": "{percent}% rain"
+  },
+  "OutfitHistory": {
+    "title": "Your recommendation ratings",
+    "loading": "Loading ratings...",
+    "errorTitle": "Error loading ratings",
+    "noRatings": "No saved ratings",
+    "noRatingsHint": "Rate your first recommendation to see history",
+    "totalRatings": "Total ratings: {count}",
+    "dateError": {
+      "noDate": "No date",
+      "invalid": "Invalid date",
+      "error": "Date error"
+    }
+  },
+  "Loading": {
+    "weather": "Loading weather data...",
+    "pleaseWait": "Please wait",
+    "generatingRecommendations": "Generating recommendations...",
+    "analyzingConditions": "Analyzing weather conditions",
+    "locationPermission": {
+      "pending": "Please allow location access",
+      "denied": "Using default location (Warsaw)",
+      "granted": "Fetching forecast for your location"
+    }
+  },
+  "Errors": {
+    "weatherFetch": "Weather fetch error",
+    "locationDenied": "Using data for Warsaw"
+  },
+  "Footer": {
+    "copyright": "© 2025 Michel Libera. All rights reserved."
+  }
+}

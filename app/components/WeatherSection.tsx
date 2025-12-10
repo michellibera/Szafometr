@@ -2,6 +2,7 @@
 
 import { RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { CurrentWeather } from '@/lib/weather/weatherService';
 
 interface WeatherSectionProps {
@@ -12,13 +13,15 @@ interface WeatherSectionProps {
   getWeatherGradient: () => string;
 }
 
-export default function WeatherSection({ 
-  weather, 
-  lastRefresh, 
-  isRefreshing, 
-  onRefreshWeather, 
-  getWeatherGradient 
+export default function WeatherSection({
+  weather,
+  lastRefresh,
+  isRefreshing,
+  onRefreshWeather,
+  getWeatherGradient
 }: WeatherSectionProps) {
+  const t = useTranslations('Weather');
+  const tDescriptions = useTranslations('Weather.descriptions');
   const [mounted, setMounted] = useState(false);
 
   // Only render time on client side to avoid hydration mismatch
@@ -26,12 +29,21 @@ export default function WeatherSection({
     setMounted(true);
   }, []);
 
+  // Get weather description from translations or fallback to stored description
+  const getWeatherDescription = () => {
+    try {
+      return tDescriptions(weather?.weatherCode?.toString() || '0');
+    } catch {
+      return weather?.description || tDescriptions('unknown');
+    }
+  };
+
   if (!weather) {
     return (
       <div className="flex-none flex flex-col items-center justify-center px-6 py-4">
         <div className="w-full mb-2">
           <div className="flex justify-center items-center mb-4">
-            <div className="text-2xl font-medium text-black">Ładowanie danych pogodowych...</div>
+            <div className="text-2xl font-medium text-black">{t('loading')}</div>
           </div>
         </div>
       </div>
@@ -45,14 +57,14 @@ export default function WeatherSection({
           <div className="flex items-center gap-4">
             <div className='flex flex-col'>
               <div className="text-8xl font-bold text-black">{weather.temp}°</div>
-              <div className="text-sm font-bold text-black ml-2">Odczuwalna {weather.feelsLike}°</div>
+              <div className="text-sm font-bold text-black ml-2">{t('feelsLike', { temp: weather.feelsLike })}</div>
             </div>
             <div className="flex flex-col">
-              <div className="text-xl font-medium text-black">{weather.description}</div>
-              <div className="text-xs text-black">{weather.precipitation}% deszczu</div>
-              <div className="text-xs text-black">Wiatr {weather.windSpeed} km/h</div>
-              <div className="text-xs text-black">Wilgotność {weather.humidity}%</div>
-              <div className="text-xs text-black">Chmury {weather.cloudCover}% pokrycia</div>
+              <div className="text-xl font-medium text-black">{getWeatherDescription()}</div>
+              <div className="text-xs text-black">{t('rain', { percent: weather.precipitation })}</div>
+              <div className="text-xs text-black">{t('wind', { speed: weather.windSpeed })}</div>
+              <div className="text-xs text-black">{t('humidity', { percent: weather.humidity })}</div>
+              <div className="text-xs text-black">{t('clouds', { percent: weather.cloudCover })}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">

@@ -1,12 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import WeatherSection from './components/WeatherSection';
-import OutfitRecommendations from './components/OutfitRecommendations';
-import AddOutfitForm from './components/AddOutfitForm';
-import Forecast from './components/Forecast';
-import OutfitHistory from './components/OutfitHistory';
+import { useTranslations, useLocale } from 'next-intl';
+import { useParams } from 'next/navigation';
+import Header from '../components/Header';
+import WeatherSection from '../components/WeatherSection';
+import OutfitRecommendations from '../components/OutfitRecommendations';
+import AddOutfitForm from '../components/AddOutfitForm';
+import Forecast from '../components/Forecast';
+import OutfitHistory from '../components/OutfitHistory';
 import { WeatherData, CurrentWeather, fetchCurrentWeather } from '@/lib/weather/weatherService';
 import { ClothingDecisionEngine, FormattedClothingRecommendation } from '@/lib/clothing/clothingEngine';
 import { useAuth } from '@/context/AuthContext';
@@ -14,7 +16,26 @@ import { useOutfitRatingsLegacy } from '@/hooks/useOutfitRatings';
 import { usePersonalization } from '@/hooks/usePersonalization';
 import { OutfitEntry } from '@/types/outfit';
 
+// Comfort level mapping for Firebase
+type ComfortKey = 'tooCold' | 'perfect' | 'tooHot';
+type ComfortValue = 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥';
+
+const comfortKeyMap: Record<ComfortKey, ComfortValue> = {
+  tooCold: 'Za zimno ❄️',
+  perfect: 'W sam raz ✅',
+  tooHot: 'Za gorąco 🔥'
+};
+
 const SzafometrApp = () => {
+  const t = useTranslations();
+  const tLoading = useTranslations('Loading');
+  const tErrors = useTranslations('Errors');
+  const tFooter = useTranslations('Footer');
+  const localeFromHook = useLocale();
+  const params = useParams();
+  // Get locale from URL params as it's more reliable in client components
+  const locale = (params?.locale as string) || localeFromHook || 'pl';
+
   const { user, signInWithGoogle } = useAuth();
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [time, setTime] = useState(new Date());
@@ -65,24 +86,24 @@ const SzafometrApp = () => {
     if (weather) {
       try {
         let recommendation;
-        
+
         if (user && personalizationProfile && !personalizationLoading) {
           // User is logged in and has personalization data - use personalized recommendation
           const baseCLO = ClothingDecisionEngine.calculateClo(weather);
           const personalizedCLO = getPersonalizedCLO(baseCLO);
-          recommendation = ClothingDecisionEngine.getPersonalizedRecommendation(weather, personalizedCLO);
+          recommendation = ClothingDecisionEngine.getPersonalizedRecommendation(weather, personalizedCLO, locale);
         } else {
           // Use standard scientific recommendation
-          recommendation = ClothingDecisionEngine.getRecommendation(weather);
+          recommendation = ClothingDecisionEngine.getRecommendation(weather, locale);
         }
-        
+
         const formatted = ClothingDecisionEngine.formatRecommendation(recommendation);
         setClothingRecommendation(formatted);
       } catch (error) {
         console.error('Error generating clothing recommendation:', error);
       }
     }
-  }, [weather, user, personalizationProfile, personalizationLoading, getPersonalizedCLO]);
+  }, [weather, user, personalizationProfile, personalizationLoading, getPersonalizedCLO, locale]);
 
   // Handle authentication-gated outfit saving
   const handleAddOutfit = () => {
@@ -114,23 +135,23 @@ const SzafometrApp = () => {
   // Weather gradients - Beautiful modern gradients based on WMO weather codes
   const getWeatherGradient = () => {
     if (!weather?.current) return 'from-sky-300 via-purple-100 to-yellow-200';
-    
+
     const temp = weather.current.temp;
     const weatherCode = weather.current.weatherCode;
     const isDay = weather.current.isDay;
     const hour = new Date().getHours();
-    
+
     // Temperature overrides (extreme conditions)
     if (temp > 35) return 'from-red-400 via-orange-400 to-yellow-300'; // Extremely hot
     if (temp < -10) return 'from-blue-300 via-slate-300 to-blue-400'; // Extremely cold
-    
+
     // Time-based overrides for night conditions
     if (!isDay || hour >= 20 || hour <= 5) {
       if (weatherCode >= 95) return 'from-slate-600 via-gray-500 to-slate-600'; // Night thunderstorm
       if (weatherCode >= 61 && weatherCode <= 82) return 'from-slate-500 via-gray-400 to-slate-500'; // Night rain
       return 'from-slate-400 via-blue-400 to-slate-500'; // Regular night
     }
-    
+
     // WMO Weather Code mapping for daytime
     switch (weatherCode) {
       // Clear conditions (0-1)
@@ -138,18 +159,18 @@ const SzafometrApp = () => {
         return temp > 25 ? 'from-orange-300 via-yellow-300 to-sky-300' : 'from-yellow-200 via-orange-200 to-blue-300';
       case 1: // Mainly clear
         return temp > 25 ? 'from-orange-300 via-yellow-300 to-sky-400' : 'from-yellow-200 via-orange-200 to-blue-400';
-      
+
       // Cloudy conditions (2-3)
       case 2: // Partly cloudy
         return 'from-sky-300 via-purple-100 to-yellow-200';
       case 3: // Overcast
         return 'from-gray-300 via-gray-200 to-gray-100';
-      
+
       // Fog conditions (45, 48)
       case 45: // Fog
       case 48: // Depositing rime fog
         return 'from-gray-50 via-gray-100 to-gray-200';
-      
+
       // Drizzle conditions (51-57)
       case 51: // Light drizzle
       case 53: // Moderate drizzle
@@ -158,7 +179,7 @@ const SzafometrApp = () => {
       case 56: // Light freezing drizzle
       case 57: // Dense freezing drizzle
         return 'from-gray-300 via-slate-300 to-gray-400';
-      
+
       // Rain conditions (61-67)
       case 61: // Slight rain
         return 'from-gray-300 via-slate-300 to-blue-300';
@@ -168,7 +189,7 @@ const SzafometrApp = () => {
       case 66: // Light freezing rain
       case 67: // Heavy freezing rain
         return 'from-gray-500 via-slate-500 to-blue-500';
-      
+
       // Snow conditions (71-77, 85-86)
       case 71: // Slight snowfall
       case 85: // Slight snow showers
@@ -179,7 +200,7 @@ const SzafometrApp = () => {
       case 75: // Heavy snowfall
       case 77: // Snow grains
         return temp < 0 ? 'from-blue-200 via-gray-200 to-blue-300' : 'from-gray-300 via-gray-400 to-gray-500';
-      
+
       // Rain showers (80-82)
       case 80: // Slight rain showers
         return 'from-gray-300 via-blue-300 to-slate-400';
@@ -187,7 +208,7 @@ const SzafometrApp = () => {
         return 'from-gray-400 via-blue-400 to-slate-500';
       case 82: // Violent rain showers
         return 'from-gray-500 via-blue-500 to-slate-600';
-      
+
       // Thunderstorm conditions (95-99)
       case 95: // Thunderstorm: slight or moderate
         return 'from-gray-500 via-slate-500 to-gray-600';
@@ -195,7 +216,7 @@ const SzafometrApp = () => {
         return 'from-gray-600 via-slate-600 to-purple-600';
       case 99: // Thunderstorm with heavy hail
         return 'from-gray-700 via-slate-700 to-purple-700';
-      
+
       // Default fallback
       default:
         // Temperature-based fallbacks
@@ -227,41 +248,45 @@ const SzafometrApp = () => {
   const getOutfitRecommendation = () => {
     if (!weather?.current) {
       return [
-        "Ładowanie danych pogodowych...",
-        "Proszę czekać",
+        tLoading('weather'),
+        tLoading('pleaseWait'),
         "",
         ""
       ];
     }
-    
+
     if (!clothingRecommendation) {
       return [
-        "Generowanie rekomendacji...",
-        "Analizowanie warunków pogodowych",
+        tLoading('generatingRecommendations'),
+        tLoading('analyzingConditions'),
         "",
         ""
       ];
     }
-    
+
     // Use personalized recommendation if available
     if (user && personalizationProfile && !personalizationLoading) {
       const baseCLO = ClothingDecisionEngine.calculateClo(weather);
       const personalizedCLO = getPersonalizedCLO(baseCLO);
-      return ClothingDecisionEngine.getSimplePersonalizedRecommendation(weather, personalizedCLO);
+      return ClothingDecisionEngine.getSimplePersonalizedRecommendation(weather, personalizedCLO, locale);
     }
-    
+
     // Fall back to standard recommendation
-    return ClothingDecisionEngine.getSimpleRecommendation(weather);
+    return ClothingDecisionEngine.getSimpleRecommendation(weather, locale);
   };
 
   const handleSaveOutfit = async () => {
     if (comfortLevel && clothingRecommendation && weather?.current) {
       const recommendedItems = getOutfitRecommendation();
-      
+
+      // Convert comfort key to Firebase value
+      const comfortKey = comfortLevel as ComfortKey;
+      const comfortValue = comfortKeyMap[comfortKey];
+
       // Save to local state (Phase 1: Parallel implementation)
       setOutfitHistory([...outfitHistory, {
         outfit: recommendedItems.join(', '),
-        comfort: comfortLevel,
+        comfort: comfortValue,
         date: new Date(),
         temp: weather.current.temp,
         recommendedItems: recommendedItems,
@@ -289,7 +314,7 @@ const SzafometrApp = () => {
               confidence: clothingRecommendation.confidence
             },
             {
-              comfort: comfortLevel as 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+              comfort: comfortValue,
               timestamp: new Date()
             }
           );
@@ -298,7 +323,7 @@ const SzafometrApp = () => {
           if (personalizationProfile) {
             try {
               await updatePersonalizationFromRating(
-                comfortLevel as 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+                comfortValue,
                 clothingRecommendation.clo,
                 weather.current
               );
@@ -327,11 +352,11 @@ const SzafometrApp = () => {
         <div className="min-h-screen bg-gradient-to-br from-sky-300 via-purple-100 to-yellow-200 flex flex-col items-center justify-center pt-20 pb-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-white mx-auto mb-4"></div>
-            <div className="text-xl font-bold text-black mb-2">Ładowanie danych pogodowych...</div>
+            <div className="text-xl font-bold text-black mb-2">{tLoading('weather')}</div>
             <div className="text-sm text-black">
-              {locationPermission === 'pending' && 'Proszę zezwolić na dostęp do lokalizacji'}
-              {locationPermission === 'denied' && 'Używamy domyślnej lokalizacji (Warszawa)'}
-              {locationPermission === 'granted' && 'Pobieranie prognozy dla Twojej lokalizacji'}
+              {locationPermission === 'pending' && tLoading('locationPermission.pending')}
+              {locationPermission === 'denied' && tLoading('locationPermission.denied')}
+              {locationPermission === 'granted' && tLoading('locationPermission.granted')}
             </div>
           </div>
         </div>
@@ -350,10 +375,10 @@ const SzafometrApp = () => {
           <div className="mx-6 mb-4 p-3 bg-red-100/90 backdrop-blur border border-red-300 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-700 text-sm font-medium">Błąd pobierania pogody</p>
+                <p className="text-red-700 text-sm font-medium">{tErrors('weatherFetch')}</p>
                 <p className="text-red-600 text-xs">{weatherError}</p>
                 {locationPermission === 'denied' && (
-                  <p className="text-red-600 text-xs mt-1">Używamy danych dla Warszawy</p>
+                  <p className="text-red-600 text-xs mt-1">{tErrors('locationDenied')}</p>
                 )}
               </div>
               <button
@@ -403,8 +428,8 @@ const SzafometrApp = () => {
 
         <Forecast hourlyData={weather?.hourly || []} />
 
-        <OutfitHistory 
-          outfitHistory={user ? firebaseRatings : outfitHistory} 
+        <OutfitHistory
+          outfitHistory={user ? firebaseRatings : outfitHistory}
           loading={user ? ratingsLoading : false}
           error={user ? ratingsError : null}
           onClearError={clearError}
@@ -413,7 +438,7 @@ const SzafometrApp = () => {
         {/* Footer */}
         <footer className="mt-8 pb-4 px-6">
           <div className="text-center text-xs text-black/60">
-            © 2025 Michel Libera. All rights reserved.
+            {tFooter('copyright')}
           </div>
         </footer>
       </div>

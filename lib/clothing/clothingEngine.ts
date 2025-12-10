@@ -1,5 +1,20 @@
 import { WeatherData } from '@/lib/weather/weatherService';
-import { findOutfitByCLO, getCLOSeasonInfo, CLOOutfit } from './cloClothingData';
+import { findOutfitByCLO as findOutfitByCLOPL, getCLOSeasonInfo as getCLOSeasonInfoPL, CLOOutfit } from './cloClothingData';
+import { findOutfitByCLO as findOutfitByCLOEN, getCLOSeasonInfo as getCLOSeasonInfoEN } from './cloClothingData.en';
+
+// Helper to get locale-specific functions
+function getCLOFunctions(locale: string = 'pl') {
+  if (locale === 'en') {
+    return {
+      findOutfitByCLO: findOutfitByCLOEN,
+      getCLOSeasonInfo: getCLOSeasonInfoEN
+    };
+  }
+  return {
+    findOutfitByCLO: findOutfitByCLOPL,
+    getCLOSeasonInfo: getCLOSeasonInfoPL
+  };
+}
 
 export interface ClothingRecommendation {
   items: string[];
@@ -28,13 +43,15 @@ export class ClothingDecisionEngine {
   /**
    * Main method to get clothing recommendation based on weather data using CLO system
    */
-  static getRecommendation(weather: WeatherData): ClothingRecommendation {
+  static getRecommendation(weather: WeatherData, locale: string = 'pl'): ClothingRecommendation {
     // Calculate CLO value based on weather conditions
     const clo = this.calculateClo(weather);
-    
+
+    const { findOutfitByCLO, getCLOSeasonInfo } = getCLOFunctions(locale);
+
     // Find best matching outfit from CLO database
     const outfit = findOutfitByCLO(clo);
-    
+
     // Get season information
     const seasonInfo = getCLOSeasonInfo(clo);
     
@@ -116,14 +133,16 @@ export class ClothingDecisionEngine {
   /**
    * Get simple recommendation for existing UI - returns clothing items as array
    */
-  static getSimpleRecommendation(weather: WeatherData): string[] {
-    const recommendation = this.getRecommendation(weather);
+  static getSimpleRecommendation(weather: WeatherData, locale: string = 'pl'): string[] {
+    const recommendation = this.getRecommendation(weather, locale);
     
     // Return the clothing items directly
     return recommendation.items.filter(item => item && item.trim().length > 0);
   }
 
-  static getPersonalizedRecommendation(weather: WeatherData, personalizedCLO: number): ClothingRecommendation {
+  static getPersonalizedRecommendation(weather: WeatherData, personalizedCLO: number, locale: string = 'pl'): ClothingRecommendation {
+    const { findOutfitByCLO, getCLOSeasonInfo } = getCLOFunctions(locale);
+
     const outfit = findOutfitByCLO(personalizedCLO);
     const seasonInfo = getCLOSeasonInfo(personalizedCLO);
 
@@ -151,8 +170,8 @@ export class ClothingDecisionEngine {
   /**
    * Get simple personalized recommendation for existing UI - returns clothing items as array
    */
-  static getSimplePersonalizedRecommendation(weather: WeatherData, personalizedCLO: number): string[] {
-    const recommendation = this.getPersonalizedRecommendation(weather, personalizedCLO);
+  static getSimplePersonalizedRecommendation(weather: WeatherData, personalizedCLO: number, locale: string = 'pl'): string[] {
+    const recommendation = this.getPersonalizedRecommendation(weather, personalizedCLO, locale);
     
     // Return the clothing items directly
     return recommendation.items.filter(item => item && item.trim().length > 0);

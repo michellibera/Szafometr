@@ -1,4 +1,7 @@
+'use client';
+
 import { Check, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface AddOutfitFormProps {
   recommendedItems: string[];
@@ -19,12 +22,20 @@ export default function AddOutfitForm({
   isDisabled,
   clo
 }: AddOutfitFormProps) {
-  const comfortOptions = ['Za zimno ❄️', 'W sam raz ✅', 'Za gorąco 🔥'];
+  const t = useTranslations('AddOutfitForm');
+  const tComfort = useTranslations('AddOutfitForm.comfort');
+
+  // Use keys for state management
+  const comfortOptions = [
+    { key: 'tooCold', label: tComfort('tooCold') },
+    { key: 'perfect', label: tComfort('perfect') },
+    { key: 'tooHot', label: tComfort('tooHot') }
+  ];
 
   return (
     <div className={`absolute top-0 left-0 right-0 p-5 transition-all duration-500 ease-in-out translate-x-0 opacity-100`}>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-2xl font-bold text-black">Jak sie czujesz?</h3>
+        <h3 className="text-2xl font-bold text-black">{t('title')}</h3>
         <button
           onClick={onCancel}
           className="p-2 hover:bg-white/20 rounded"
@@ -38,15 +49,15 @@ export default function AddOutfitForm({
           <div className="grid grid-rows-3 gap-3 mt-3">
             {comfortOptions.map((option) => (
               <button
-                key={option}
-                onClick={() => onComfortChange(option)}
+                key={option.key}
+                onClick={() => onComfortChange(option.key)}
                 className={`p-2 rounded text-center transition-colors text-sm bg-white/40 backdrop-blur-sm border ${
-                  comfortLevel === option
+                  comfortLevel === option.key
                     ? 'border-black text-black'
                     : 'border-white/50 hover:bg-white/50 text-black'
                 }`}
               >
-                {option}
+                {option.label}
               </button>
             ))}
           </div>
@@ -59,7 +70,7 @@ export default function AddOutfitForm({
         className="w-full bg-black text-white rounded-full py-3 px-5 font-bold text-base hover:bg-black/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Check className="w-4 h-4" />
-        Zapisz ocenę
+        {t('saveButton')}
       </button>
     </div>
   );
