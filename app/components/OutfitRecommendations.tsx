@@ -39,8 +39,8 @@ export default function OutfitRecommendations({
       </div>
       <div className='flex flex-col mb-5 text-xs text-black'>
         <span>{t('cloInfo')}</span>
-        <span>• {t('cloBase', { clo: baseClo })}</span>
-        <span>• {t('cloPersonalized', { clo: isPersonalized ? personalizedClo : t('cloNoPersonalization') })}.</span>
+        <span>• {t('cloBase', { clo: baseClo ?? 0 })}</span>
+        <span>• {t('cloPersonalized', { clo: isPersonalized ? (personalizedClo ?? 0) : t('cloNoPersonalization') })}.</span>
       </div>
       <button
         onClick={user ? onAddOutfit : onLogin}
