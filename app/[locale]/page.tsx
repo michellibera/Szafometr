@@ -347,7 +347,7 @@ const SzafometrApp = () => {
   // Show loading screen during initial weather fetch
   if (isLoadingWeather) {
     return (
-      <div className="min-h-screen w-full max-w-md mx-auto bg-gray-100 relative">
+      <div className="min-h-screen w-full max-w-md mx-auto bg-gray-100 relative shadow-[4px_0_16px_rgba(0,0,0,0.15),-4px_0_16px_rgba(0,0,0,0.15)]">
         <Header />
         <div className="min-h-screen bg-gradient-to-br from-sky-300 via-purple-100 to-yellow-200 flex flex-col items-center justify-center pt-20 pb-8">
           <div className="text-center">
@@ -365,7 +365,7 @@ const SzafometrApp = () => {
   }
 
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto bg-gray-100 relative">
+    <div className="min-h-screen w-full max-w-md mx-auto bg-gray-100 relative shadow-[4px_0_16px_rgba(0,0,0,0.15),-4px_0_16px_rgba(0,0,0,0.15)]">
       <Header />
 
       {/* Main Content */}
