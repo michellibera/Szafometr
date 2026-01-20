@@ -25,7 +25,7 @@ export interface LearningEvent {
     baseClo: number;
     personalBias: number;
     predictedClo: number;
-    userRating: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥';
+    userRating: 'Za zimno' | 'W sam raz' | 'Za gorąco';
 
     biasAdjustment: number;
     newBias: number;
@@ -59,7 +59,7 @@ export class PersonalBiasLearner {
      */
     static updateBiasFromFeedback(
         profile: UserPersonalizationProfile,
-        userRating: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+        userRating: 'Za zimno' | 'W sam raz' | 'Za gorąco',
         predictedClo: number,
         weather: any
     ): 
@@ -112,16 +112,16 @@ export class PersonalBiasLearner {
     }
 
     private static getRatingAdjustment(
-        rating: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+        rating: 'Za zimno' | 'W sam raz' | 'Za gorąco',
         profile: UserPersonalizationProfile): number {
             switch(rating) {
-                case 'Za zimno ❄️':
+                case 'Za zimno':
                     // User needs warmer clothes (higher CLO)
                     return +0.15;
-                case 'Za gorąco 🔥':
+                case 'Za gorąco':
                     // User needs cooler clothes (lower Clo)
                     return -0.15;
-                case 'W sam raz ✅':
+                case 'W sam raz':
                     return 0.0;
                 default:
                     return 0.0;

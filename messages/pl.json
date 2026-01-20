@@ -60,9 +60,9 @@
     "title": "Jak się czujesz?",
     "saveButton": "Zapisz ocenę",
     "comfort": {
-      "tooCold": "Za zimno ❄️",
-      "perfect": "W sam raz ✅",
-      "tooHot": "Za gorąco 🔥"
+      "tooCold": "Za zimno",
+      "perfect": "W sam raz",
+      "tooHot": "Za gorąco"
     }
   },
   "Forecast": {

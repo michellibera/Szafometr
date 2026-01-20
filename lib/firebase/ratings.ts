@@ -32,7 +32,7 @@ export interface RecommendationData {
 }
 
 export interface RatingData {
-  comfort: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥';
+  comfort: 'Za zimno' | 'W sam raz' | 'Za gorąco';
   timestamp: Timestamp | Date;
 }
 

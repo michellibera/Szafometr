@@ -10,7 +10,7 @@ interface UsePersonalizationReturn {
   error: string | null;                         // Any error that occurred
   getPersonalizedCLO: (baseCLO: number) => number;  // Get adjusted CLO
   updateFromRating: (                           // Learn from user feedback
-    userRating: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+    userRating: 'Za zimno' | 'W sam raz' | 'Za gorąco',
     predictedCLO: number,
     weather: any
   ) => Promise<void>;
@@ -87,7 +87,7 @@ export function usePersonalization(): UsePersonalizationReturn {
 
   // Update profile from user rating (this is where learning happens!)
   const updateFromRating = useCallback(async (
-    userRating: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+    userRating: 'Za zimno' | 'W sam raz' | 'Za gorąco',
     predictedCLO: number,
     weather: any
   ) => {

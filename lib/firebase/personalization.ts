@@ -95,7 +95,7 @@ export class PersonalizationService {
 
     static async updateProfileFromFeedback(
         profile: UserPersonalizationProfile,
-        userRating: 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥',
+        userRating: 'Za zimno' | 'W sam raz' | 'Za gorąco',
         predictedClo: number,
         weather: any
     ): Promise<UserPersonalizationProfile> {

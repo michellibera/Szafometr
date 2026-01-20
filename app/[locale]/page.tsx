@@ -18,12 +18,12 @@ import { OutfitEntry } from '@/types/outfit';
 
 // Comfort level mapping for Firebase
 type ComfortKey = 'tooCold' | 'perfect' | 'tooHot';
-type ComfortValue = 'Za zimno ❄️' | 'W sam raz ✅' | 'Za gorąco 🔥';
+type ComfortValue = 'Za zimno' | 'W sam raz' | 'Za gorąco';
 
 const comfortKeyMap: Record<ComfortKey, ComfortValue> = {
-  tooCold: 'Za zimno ❄️',
-  perfect: 'W sam raz ✅',
-  tooHot: 'Za gorąco 🔥'
+  tooCold: 'Za zimno',
+  perfect: 'W sam raz',
+  tooHot: 'Za gorąco'
 };
 
 const SzafometrApp = () => {

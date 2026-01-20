@@ -25,7 +25,7 @@ service cloud.firestore {
         && data.recommendation.items is list
         && data.recommendation.clo is number
         && data.rating.keys().hasAll(['comfort', 'timestamp'])
-        && data.rating.comfort in ['Za zimno ❄️', 'W sam raz ✅', 'Za gorąco 🔥'];
+        && data.rating.comfort in ['Za zimno', 'W sam raz', 'Za gorąco'];
     }
     
     // Deny all other access

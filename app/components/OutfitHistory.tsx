@@ -28,9 +28,9 @@ function formatDate(date: Date | null | undefined, t: any): string {
 // Helper function to map Polish comfort values to translation keys
 function getComfortKey(comfort: string): string {
   const comfortMap: Record<string, string> = {
-    'Za zimno ❄️': 'tooCold',
-    'W sam raz ✅': 'perfect',
-    'Za gorąco 🔥': 'tooHot',
+    'Za zimno': 'tooCold',
+    'W sam raz': 'perfect',
+    'Za gorąco': 'tooHot',
     // Also support keys directly in case they're already stored as keys
     'tooCold': 'tooCold',
     'perfect': 'perfect',
