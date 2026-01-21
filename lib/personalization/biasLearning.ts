@@ -84,9 +84,9 @@ export class PersonalBiasLearner {
             ...profile,
             personalBias: newBias,
             totalRatings: profile.totalRatings + 1,
-            positiveRatings: profile.positiveRatings + (userRating === 'W sam raz ✅' ? 1 : 0),
+            positiveRatings: profile.positiveRatings + (userRating === 'W sam raz' ? 1 : 0),
             learningRate: Math.max(0.05, profile.learningRate * 0.995), // decay learning rate
-            confidence: this.calculateConfidence(profile.totalRatings + 1, profile.positiveRatings + (userRating === 'W sam raz ✅' ? 1 : 0)),
+            confidence: this.calculateConfidence(profile.totalRatings + 1, profile.positiveRatings + (userRating === 'W sam raz' ? 1 : 0)),
             consistencyScore: this.updateConsistencyScore(profile, userRating),
             recentAccuracy: this.updateRecentAccuracy(profile, userRating),
             lastUpdated: new Date(),
@@ -152,14 +152,14 @@ export class PersonalBiasLearner {
     private static updateConsistencyScore(profile: UserPersonalizationProfile, newRating: string): number {
         // Simple check: can be changed
         const alpha = 0.1;
-        const ratingScore = newRating === 'W sam raz ✅' ? 1.0 : 0.3;
+        const ratingScore = newRating === 'W sam raz' ? 1.0 : 0.3;
         return profile.consistencyScore * (1-alpha) + ratingScore * alpha;
     }
 
     private static updateRecentAccuracy(profile: UserPersonalizationProfile, newRating: string): number {
         // Simple implementation - weighted moving average
         const alpha = 0.2;
-        const isAccurate = newRating === 'W sam raz ✅' ? 1.0 : 0.0;
+        const isAccurate = newRating === 'W sam raz' ? 1.0 : 0.0;
 
         return profile.recentAccuracy * (1 - alpha) + isAccurate * alpha;
     }

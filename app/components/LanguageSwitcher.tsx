@@ -39,7 +39,7 @@ export default function LanguageSwitcher() {
   return (
     <div className="relative group">
       <button
-        className="flex items-center gap-2 bg-white/30 backdrop-blur rounded px-3 py-2 hover:bg-white/40 transition-all"
+        className="flex items-center gap-1.5 bg-white/30 backdrop-blur rounded px-2 py-1.5 hover:bg-white/40 transition-all"
         aria-label="Change language"
       >
         <Globe className="w-4 h-4 text-black/80" />
